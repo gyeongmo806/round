@@ -38,7 +38,7 @@
             font-size: 18px;
             color: #333;
             transform-origin: center;
-            letter-spacing: 1px;
+            letter-spacing: 5px;
         }
 
         .heart {
@@ -120,6 +120,7 @@
                 tempSpan.style.position = 'absolute'; 
                 tempSpan.style.fontSize = '18px';     
                 tempSpan.style.fontFamily = window.getComputedStyle(document.body).fontFamily; 
+                tempSpan.style.letterSpacing = '5px';
                 tempSpan.textContent = baseTextUnit;
                 
                 document.body.appendChild(tempSpan); 
