@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>돌아가는이연빈</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f8ff;
+            overflow: hidden;
+        }
+
+        .animation-wrapper {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .circle-text-container {
+            width: 220px;
+            height: 220px;
+            border: none;
+            border-radius: 50%;
+            position: absolute;
+            animation: rotateClockwise 15s linear infinite;
+        }
+
+        .char {
+            position: absolute;
+            font-size: 18px;
+            color: #333;
+            transform-origin: center;
+        }
+
+        .heart {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            animation: pulseHeart 1.5s ease-in-out infinite alternate;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .heart img {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+            height: auto;
+        }
+
+        @keyframes rotateClockwise {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes pulseHeart {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.3);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="animation-wrapper">
+        <div class="circle-text-container" id="circleText">
+            </div>
+        <div class="heart">
+            <img src="/heart.png" alt="Pulsing Heart">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const circleContainer = document.getElementById('circleText');
+
+            requestAnimationFrame(() => {
+                if (!circleContainer) {
+                    console.error("Circle container not found!");
+                    return;
+                }
+
+                const diameter = circleContainer.offsetWidth;
+                const radius = diameter / 2;
+                const circumference = Math.PI * diameter;
+                const baseTextUnit = "이연빈";
+                let finalText = "";
+
+                const tempSpan = document.createElement('span');
+                tempSpan.style.visibility = 'hidden';
+                tempSpan.style.position = 'absolute';
+                tempSpan.style.fontSize = '18px';
+                tempSpan.style.fontFamily = window.getComputedStyle(document.body).fontFamily;
+                tempSpan.textContent = baseTextUnit;
+                
+                document.body.appendChild(tempSpan);
+                const unitWidth = tempSpan.offsetWidth;
+                document.body.removeChild(tempSpan);
+
+                if (unitWidth > 0) {
+                    const numRepetitions = Math.ceil(circumference / unitWidth);
+                    for (let i = 0; i < Math.max(1, numRepetitions); i++) {
+                        finalText += baseTextUnit;
+                    }
+                } else {
+                    finalText = baseTextUnit.length > 0 ? baseTextUnit : "이름";
+                }
+                
+                if (finalText.length === 0 && baseTextUnit.length > 0) {
+                    finalText = baseTextUnit;
+                } else if (finalText.length === 0) {
+                    finalText = "텍스트";
+                }
+
+                circleContainer.innerHTML = '';
+
+                const characters = finalText.split('');
+                const numChars = characters.length;
+
+                if (numChars === 0) return;
+
+                const angleStep = (2 * Math.PI) / numChars;
+
+                characters.forEach((char, index) => {
+                    const charSpan = document.createElement('span');
+                    charSpan.textContent = char;
+                    charSpan.classList.add('char');
+
+                    const angle = (index * angleStep) - (Math.PI / 2);
+                    const x = radius + (radius * Math.cos(angle));
+                    const y = radius + (radius * Math.sin(angle));
+                    
+                    charSpan.style.left = `${x}px`;
+                    charSpan.style.top = `${y}px`;
+
+                    const rotationAngleDeg = (angle * (180 / Math.PI)) + 90;
+                    charSpan.style.transform = `translate(-50%, -50%) rotate(${rotationAngleDeg}deg)`;
+                    
+                    circleContainer.appendChild(charSpan);
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
