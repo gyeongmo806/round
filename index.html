@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>돌아가는이연빈</title>
+    <title>미리보기방지턱</title>
     <style>
         body {
             margin: 0;
@@ -12,6 +12,7 @@
             align-items: center;
             min-height: 100vh;
             background-color: #f0f8ff;
+            /* font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Nanum Gothic', sans-serif; */
             overflow: hidden;
         }
 
@@ -27,7 +28,6 @@
         .circle-text-container {
             width: 220px;
             height: 220px;
-            border: none;
             border-radius: 50%;
             position: absolute;
             animation: rotateClockwise 15s linear infinite;
@@ -37,26 +37,26 @@
             position: absolute;
             font-size: 18px;
             color: #333;
-            transform-origin: center;
+            transform-origin: center; 
         }
 
         .heart {
-            position: absolute;
+            position: absolute; 
             top: 50%;
             left: 50%;
             animation: pulseHeart 1.5s ease-in-out infinite alternate;
             width: 60px;
             height: 60px;
-            display: flex;
+            display: flex; 
             justify-content: center;
             align-items: center;
         }
 
         .heart img {
             display: block;
-            max-width: 100%;
+            max-width: 100%; 
             max-height: 100%;
-            height: auto;
+            height: auto; 
         }
 
         @keyframes rotateClockwise {
@@ -82,15 +82,22 @@
 
     <div class="animation-wrapper">
         <div class="circle-text-container" id="circleText">
-            </div>
+        </div>
         <div class="heart">
-            <img src="heart.png" alt="Pulsing Heart">
+            <img src="heart.png" alt="Pulsing Heart" onerror="this.onerror=null; this.src='https://placehold.co/60x60/E74C3C/FFFFFF?text=♥&font=arial';">
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const circleContainer = document.getElementById('circleText');
+
+            function getUrlParameter(name) {
+                name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+                const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+                const results = regex.exec(location.search);
+                return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+            }
 
             requestAnimationFrame(() => {
                 if (!circleContainer) {
@@ -101,41 +108,44 @@
                 const diameter = circleContainer.offsetWidth;
                 const radius = diameter / 2;
                 const circumference = Math.PI * diameter;
-                const baseTextUnit = "이연빈";
+                
+                const nameFromUrl = getUrlParameter('name');
+                const baseTextUnit = nameFromUrl ? nameFromUrl : "이연빈❤️";
+                
                 let finalText = "";
 
                 const tempSpan = document.createElement('span');
-                tempSpan.style.visibility = 'hidden';
-                tempSpan.style.position = 'absolute';
-                tempSpan.style.fontSize = '18px';
-                tempSpan.style.fontFamily = window.getComputedStyle(document.body).fontFamily;
+                tempSpan.style.visibility = 'hidden'; 
+                tempSpan.style.position = 'absolute'; 
+                tempSpan.style.fontSize = '18px';     
+                tempSpan.style.fontFamily = window.getComputedStyle(document.body).fontFamily; 
                 tempSpan.textContent = baseTextUnit;
                 
-                document.body.appendChild(tempSpan);
+                document.body.appendChild(tempSpan); 
                 const unitWidth = tempSpan.offsetWidth;
-                document.body.removeChild(tempSpan);
+                document.body.removeChild(tempSpan); 
 
                 if (unitWidth > 0) {
                     const numRepetitions = Math.ceil(circumference / unitWidth);
-                    for (let i = 0; i < Math.max(1, numRepetitions); i++) {
+                    for (let i = 0; i < Math.max(1, numRepetitions); i++) { 
                         finalText += baseTextUnit;
                     }
                 } else {
-                    finalText = baseTextUnit.length > 0 ? baseTextUnit : "이름";
+                    finalText = baseTextUnit.length > 0 ? baseTextUnit : "이름"; 
                 }
                 
                 if (finalText.length === 0 && baseTextUnit.length > 0) {
                     finalText = baseTextUnit;
                 } else if (finalText.length === 0) {
-                    finalText = "텍스트";
+                    finalText = "텍스트"; 
                 }
 
-                circleContainer.innerHTML = '';
+                circleContainer.innerHTML = ''; 
 
                 const characters = finalText.split('');
                 const numChars = characters.length;
 
-                if (numChars === 0) return;
+                if (numChars === 0) return; 
 
                 const angleStep = (2 * Math.PI) / numChars;
 
